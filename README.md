@@ -1,5 +1,7 @@
 # N-Pass — Local-First Password Manager
 
+**Live Demo:** https://n-pass-navy.vercel.app
+
 A clean, minimal password manager that runs entirely in your browser. No accounts, no servers, no cloud — your passwords live in your device's local storage.
 
 ---
