@@ -14,7 +14,7 @@ const Navbar = () => {
             <rect x="15" y="17.5" width="2" height="4" fill="#0b0f0c"/>
           </svg>
           <span className="text-sm font-bold tracking-[0.2em] text-[#d6e8cf]">
-            N-PASS<span className="text-[#9ef01a]">_</span>
+            NEBULA<span className="text-[#9ef01a]">_</span>
           </span>
         </div>
 
@@ -25,7 +25,7 @@ const Navbar = () => {
             local-only
           </div>
           <a
-            href="https://github.com/Abudora-0/N-Pass"
+            href="https://github.com/Abudora-0/Nebula"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3 py-1.5 text-[11px] uppercase tracking-widest text-[#5a7050] border border-[#223021] hover:text-[#9ef01a] hover:border-[#9ef01a] transition-colors"

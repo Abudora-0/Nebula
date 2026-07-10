@@ -1,4 +1,4 @@
-# N-Pass — Local-First Password Manager
+# Nebula — Local-First Password Manager
 
 **Live Demo:** https://n-pass-navy.vercel.app
 
@@ -8,7 +8,7 @@ A clean, minimal password manager that runs entirely in your browser. No account
 
 ## About
 
-N-Pass was built to solve a simple problem: storing passwords without trusting a third-party service. Everything is saved locally using `localStorage`, meaning your data never leaves your device. The app includes a built-in password generator, strength indicator, and one-click copy — all wrapped in a lightweight React + Tailwind interface.
+Nebula was built to solve a simple problem: storing passwords without trusting a third-party service. Everything is saved locally using `localStorage`, meaning your data never leaves your device. The app includes a built-in password generator, strength indicator, and one-click copy — all wrapped in a lightweight React + Tailwind interface.
 
 ---
 
@@ -54,6 +54,6 @@ npm run build
 
 ## Notes
 
-- Data is stored in `localStorage` under the key `npass-v2`
+- Data is stored in `localStorage` under the key `nebula-v1`
 - No backend, no authentication — this is a local-only tool
 - Clearing browser storage will erase all saved passwords

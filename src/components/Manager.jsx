@@ -76,13 +76,13 @@ const Manager = () => {
   const [editId, setEditId] = useState(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem('npass-v2')
+    const stored = localStorage.getItem('nebula-v1') || localStorage.getItem('npass-v2')
     if (stored) setPasswordArray(JSON.parse(stored))
   }, [])
 
   const persist = (arr) => {
     setPasswordArray(arr)
-    localStorage.setItem('npass-v2', JSON.stringify(arr))
+    localStorage.setItem('nebula-v1', JSON.stringify(arr))
   }
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
