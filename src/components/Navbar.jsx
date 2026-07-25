@@ -5,12 +5,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <svg width="26" height="26" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="32" height="32" rx="6" fill="#10160f"/>
-            <rect x="1" y="1" width="30" height="30" rx="5" stroke="#9ef01a" strokeOpacity="0.4"/>
-            <path d="M6 6h4M6 6v4" stroke="#9ef01a" strokeWidth="1.6"/>
-            <path d="M26 26h-4M26 26v-4" stroke="#9ef01a" strokeWidth="1.6"/>
-            <circle cx="12" cy="16" r="5" fill="#9ef01a"/>
-            <circle cx="12" cy="16" r="2.1" fill="#10160f"/>
+            <circle cx="12" cy="16" r="5" fill="none" stroke="#9ef01a" strokeWidth="2.4"/>
             <rect x="16.5" y="14.7" width="10" height="2.6" rx="0.4" fill="#9ef01a"/>
             <rect x="20.5" y="17.3" width="1.8" height="3.2" fill="#9ef01a"/>
             <rect x="24" y="17.3" width="1.8" height="2.2" fill="#9ef01a"/>

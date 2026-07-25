@@ -6,7 +6,7 @@ const Footer = () => {
           NEBULA<span className="text-[#9ef01a]">_</span> // zero-backend vault
         </span>
         <span>
-          built by <span className="text-[#9ef01a] normal-case tracking-normal">Making Of Ab</span>
+          built by <span className="text-[#9ef01a] normal-case tracking-normal">Making Of Abudora</span>
         </span>
       </div>
     </footer>
