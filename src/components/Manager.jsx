@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import { v4 as uuidv4 } from 'uuid'
 import 'react-toastify/dist/ReactToastify.css'
@@ -21,6 +21,45 @@ const getStrength = (pwd) => {
 const generatePassword = () => {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
   return Array.from({ length: 16 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
+}
+
+const parseCSV = (text) => {
+  const rows = []
+  let row = []
+  let field = ''
+  let inQuotes = false
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i]
+    if (inQuotes) {
+      if (char === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++ }
+        else inQuotes = false
+      } else {
+        field += char
+      }
+    } else if (char === '"') {
+      inQuotes = true
+    } else if (char === ',') {
+      row.push(field); field = ''
+    } else if (char === '\r') {
+      // skip, handled by \n
+    } else if (char === '\n') {
+      row.push(field); field = ''
+      rows.push(row); row = []
+    } else {
+      field += char
+    }
+  }
+  if (field.length > 0 || row.length > 0) {
+    row.push(field)
+    rows.push(row)
+  }
+  return rows.filter(r => !(r.length === 1 && r[0].trim() === ''))
+}
+
+const csvEscape = (value) => {
+  const str = String(value ?? '')
+  return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str
 }
 
 const EyeIcon = () => (
@@ -58,6 +97,16 @@ const ShuffleIcon = () => (
     <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/>
   </svg>
 )
+const DownloadIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+)
+const UploadIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+  </svg>
+)
 
 const FieldLabel = ({ children }) => (
   <label className="block text-[10px] uppercase tracking-[0.25em] text-[#5a7050] mb-1.5">
@@ -74,6 +123,7 @@ const Manager = () => {
   const [copiedId, setCopiedId] = useState(null)
   const [search, setSearch] = useState('')
   const [editId, setEditId] = useState(null)
+  const fileInputRef = useRef(null)
 
   useEffect(() => {
     const stored = localStorage.getItem('nebula-v1') || localStorage.getItem('npass-v2')
@@ -137,6 +187,73 @@ const Manager = () => {
     setTimeout(() => setCopiedId(null), 1500)
   }
 
+  const handleExport = () => {
+    if (passwordArray.length === 0) {
+      toast.error('EXPORT FAILED // vault is empty')
+      return
+    }
+    const header = 'name,url,username,password,note'
+    const lines = passwordArray.map(p =>
+      [p.site, p.site, p.username, p.password, ''].map(csvEscape).join(',')
+    )
+    const csv = [header, ...lines].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `nebula-export-${new Date().toISOString().slice(0, 10)}.csv`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+    toast.success('EXPORTED // vault written to CSV')
+  }
+
+  const handleImportClick = () => fileInputRef.current?.click()
+
+  const handleImportFile = (e) => {
+    const file = e.target.files[0]
+    e.target.value = ''
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const rows = parseCSV(String(ev.target.result))
+        if (rows.length < 2) throw new Error('empty file')
+
+        const header = rows[0].map(h => h.trim().toLowerCase())
+        const idx = {
+          name: header.indexOf('name'),
+          url: header.indexOf('url'),
+          username: header.indexOf('username'),
+          password: header.indexOf('password'),
+        }
+        if (idx.username === -1 || idx.password === -1 || (idx.name === -1 && idx.url === -1)) {
+          throw new Error('missing required columns')
+        }
+
+        const imported = []
+        for (let i = 1; i < rows.length; i++) {
+          const r = rows[i]
+          const site = (idx.url !== -1 ? r[idx.url] : '') || (idx.name !== -1 ? r[idx.name] : '')
+          const username = r[idx.username]
+          const password = r[idx.password]
+          if (!site || !username || !password) continue
+          imported.push({ site, username, password, id: uuidv4() })
+        }
+        if (imported.length === 0) throw new Error('no valid rows')
+
+        persist([...passwordArray, ...imported])
+        toast.success(`IMPORTED // ${imported.length} entr${imported.length === 1 ? 'y' : 'ies'} added`)
+      } catch {
+        toast.error('IMPORT FAILED // invalid CSV file')
+      }
+    }
+    reader.onerror = () => toast.error('IMPORT FAILED // could not read file')
+    reader.readAsText(file)
+  }
+
   const filtered = passwordArray.filter(p =>
     p.site.toLowerCase().includes(search.toLowerCase()) ||
     p.username.toLowerCase().includes(search.toLowerCase())
@@ -160,7 +277,7 @@ const Manager = () => {
             SECURE VAULT<span className="cursor-blink text-[#9ef01a]">▌</span>
           </h1>
           <p className="text-[#5a7050] text-sm mt-2">
-            {passwordArray.length} record{passwordArray.length === 1 ? '' : 's'} on file — nothing ever leaves this device.
+            {passwordArray.length} record{passwordArray.length === 1 ? '' : 's'} on file, nothing ever leaves this device.
           </p>
         </div>
 
@@ -270,12 +387,35 @@ const Manager = () => {
               <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#d6e8cf]">Vault records</h2>
               <span className="text-[10px] text-[#47593f] ml-1">[{passwordArray.length}]</span>
             </div>
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="grep records…"
-              className="vault-input sm:w-56 !py-1.5 text-xs"
-            />
+            <div className="flex items-center gap-2">
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="grep records…"
+                className="vault-input sm:w-56 !py-1.5 text-xs"
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,text/csv"
+                onChange={handleImportFile}
+                className="hidden"
+              />
+              <button
+                onClick={handleImportClick}
+                className="btn-ghost !py-1.5 flex items-center gap-1.5 shrink-0"
+                title="Import CSV (Chrome / Brave / Google Password Manager)"
+              >
+                <UploadIcon /> Import
+              </button>
+              <button
+                onClick={handleExport}
+                className="btn-ghost !py-1.5 flex items-center gap-1.5 shrink-0"
+                title="Export vault to CSV"
+              >
+                <DownloadIcon /> Export
+              </button>
+            </div>
           </div>
 
           {/* Empty state */}
