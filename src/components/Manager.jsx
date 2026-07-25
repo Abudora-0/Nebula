@@ -120,6 +120,7 @@ const Manager = () => {
   const [showPwd, setShowPwd] = useState(false)
   const [visiblePasswords, setVisiblePasswords] = useState(new Set())
   const [pendingDelete, setPendingDelete] = useState(null)
+  const [pendingClearAll, setPendingClearAll] = useState(false)
   const [copiedId, setCopiedId] = useState(null)
   const [search, setSearch] = useState('')
   const [editId, setEditId] = useState(null)
@@ -171,6 +172,12 @@ const Manager = () => {
     persist(passwordArray.filter(p => p.id !== pendingDelete))
     setPendingDelete(null)
     toast.success('ENTRY PURGED // vault synced')
+  }
+
+  const clearAll = () => {
+    persist([])
+    setPendingClearAll(false)
+    toast.success('VAULT WIPED // all records purged')
   }
 
   const toggleVisible = (id) => {
@@ -415,6 +422,32 @@ const Manager = () => {
               >
                 <DownloadIcon /> Export
               </button>
+              {pendingClearAll ? (
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-[#ff5252] text-[10px] uppercase tracking-widest">wipe all {passwordArray.length}?</span>
+                  <button
+                    onClick={clearAll}
+                    className="px-2.5 py-1 text-[10px] uppercase tracking-widest font-bold text-[#ff5252] border border-[#ff5252]/50 hover:bg-[#ff5252] hover:text-[#0b0f0c] transition-all"
+                  >
+                    Y
+                  </button>
+                  <button
+                    onClick={() => setPendingClearAll(false)}
+                    className="px-2.5 py-1 text-[10px] uppercase tracking-widest text-[#5a7050] border border-[#223021] hover:border-[#5a7050] transition-all"
+                  >
+                    N
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setPendingClearAll(true)}
+                  disabled={passwordArray.length === 0}
+                  className="btn-ghost !py-1.5 flex items-center gap-1.5 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+                  title="Erase all records"
+                >
+                  <TrashIcon /> Clear All
+                </button>
+              )}
             </div>
           </div>
 
@@ -428,7 +461,7 @@ const Manager = () => {
    | |____| |
    |  [==]  |
    '--------'`}</pre>
-              <p className="text-xs uppercase tracking-[0.25em] text-[#47593f]">vault empty — add your first entry</p>
+              <p className="text-xs uppercase tracking-[0.25em] text-[#47593f]">vault empty, add your first entry</p>
             </div>
           )}
 
