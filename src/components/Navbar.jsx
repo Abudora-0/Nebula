@@ -9,9 +9,11 @@ const Navbar = () => {
             <rect x="1" y="1" width="30" height="30" rx="5" stroke="#9ef01a" strokeOpacity="0.4"/>
             <path d="M6 6h4M6 6v4" stroke="#9ef01a" strokeWidth="1.6"/>
             <path d="M26 26h-4M26 26v-4" stroke="#9ef01a" strokeWidth="1.6"/>
-            <rect x="10" y="14" width="12" height="10" rx="1" fill="#9ef01a"/>
-            <path d="M12.5 14v-3.5a3.5 3.5 0 017 0V14" stroke="#9ef01a" strokeWidth="2.2" fill="none"/>
-            <rect x="15" y="17.5" width="2" height="4" fill="#0b0f0c"/>
+            <circle cx="12" cy="16" r="5" fill="#9ef01a"/>
+            <circle cx="12" cy="16" r="2.1" fill="#10160f"/>
+            <rect x="16.5" y="14.7" width="10" height="2.6" rx="0.4" fill="#9ef01a"/>
+            <rect x="20.5" y="17.3" width="1.8" height="3.2" fill="#9ef01a"/>
+            <rect x="24" y="17.3" width="1.8" height="2.2" fill="#9ef01a"/>
           </svg>
           <span className="text-sm font-bold tracking-[0.2em] text-[#d6e8cf]">
             NEBULA<span className="text-[#9ef01a]">_</span>
