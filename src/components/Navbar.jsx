@@ -4,7 +4,7 @@ const Navbar = () => {
       <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <svg width="26" height="26" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="36" height="24" viewBox="4 8 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="16" r="5" fill="none" stroke="#9ef01a" strokeWidth="2.4"/>
             <rect x="16.5" y="14.7" width="10" height="2.6" rx="0.4" fill="#9ef01a"/>
             <rect x="20.5" y="17.3" width="1.8" height="3.2" fill="#9ef01a"/>
