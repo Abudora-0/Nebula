@@ -6,7 +6,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![No Backend](https://img.shields.io/badge/backend-none-9ef01a.svg)](#about)
 
-**Live Demo:** https://n-pass-navy.vercel.app
+**Live Demo:** https://nebuula.vercel.app/
 
 A clean, minimal password manager that runs entirely in your browser. No accounts, no servers, no cloud, your passwords live in your device's local storage.
 
