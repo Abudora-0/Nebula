@@ -388,18 +388,18 @@ const Manager = () => {
 
         {/* Vault records */}
         <div className="vault-panel">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-[#223021]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-[#223021]">
             <div className="flex items-center gap-2">
               <span className="text-[#9ef01a] text-sm font-bold">&gt;</span>
               <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-[#d6e8cf]">Vault records</h2>
               <span className="text-[10px] text-[#47593f] ml-1">[{passwordArray.length}]</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2 w-full sm:w-auto sm:flex-row sm:items-center">
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="grep records…"
-                className="vault-input sm:w-56 !py-1.5 text-xs"
+                className="vault-input w-full sm:w-56 !py-1.5 text-xs"
               />
               <input
                 ref={fileInputRef}
@@ -408,46 +408,48 @@ const Manager = () => {
                 onChange={handleImportFile}
                 className="hidden"
               />
-              <button
-                onClick={handleImportClick}
-                className="btn-ghost !py-1.5 flex items-center gap-1.5 shrink-0"
-                title="Import CSV (Chrome / Brave / Google Password Manager)"
-              >
-                <UploadIcon /> Import
-              </button>
-              <button
-                onClick={handleExport}
-                className="btn-ghost !py-1.5 flex items-center gap-1.5 shrink-0"
-                title="Export vault to CSV"
-              >
-                <DownloadIcon /> Export
-              </button>
-              {pendingClearAll ? (
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-[#ff5252] text-[10px] uppercase tracking-widest">wipe all {passwordArray.length}?</span>
-                  <button
-                    onClick={clearAll}
-                    className="px-2.5 py-1 text-[10px] uppercase tracking-widest font-bold text-[#ff5252] border border-[#ff5252]/50 hover:bg-[#ff5252] hover:text-[#0b0f0c] transition-all"
-                  >
-                    Y
-                  </button>
-                  <button
-                    onClick={() => setPendingClearAll(false)}
-                    className="px-2.5 py-1 text-[10px] uppercase tracking-widest text-[#5a7050] border border-[#223021] hover:border-[#5a7050] transition-all"
-                  >
-                    N
-                  </button>
-                </div>
-              ) : (
+              <div className="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-2">
                 <button
-                  onClick={() => setPendingClearAll(true)}
-                  disabled={passwordArray.length === 0}
-                  className="btn-ghost !py-1.5 flex items-center gap-1.5 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-                  title="Erase all records"
+                  onClick={handleImportClick}
+                  className="btn-ghost !py-1.5 !px-2 sm:!px-3 flex items-center justify-center gap-1.5 whitespace-nowrap"
+                  title="Import CSV (Chrome / Brave / Google Password Manager)"
                 >
-                  <TrashIcon /> Clear All
+                  <span className="hidden sm:inline-flex"><UploadIcon /></span> Import
                 </button>
-              )}
+                <button
+                  onClick={handleExport}
+                  className="btn-ghost !py-1.5 !px-2 sm:!px-3 flex items-center justify-center gap-1.5 whitespace-nowrap"
+                  title="Export vault to CSV"
+                >
+                  <span className="hidden sm:inline-flex"><DownloadIcon /></span> Export
+                </button>
+                {pendingClearAll ? (
+                  <div className="col-span-3 sm:col-auto flex items-center justify-center gap-2 border border-[#ff5252]/30 py-1.5 sm:border-0 sm:py-0">
+                    <span className="text-[#ff5252] text-[10px] uppercase tracking-widest whitespace-nowrap">wipe all {passwordArray.length}?</span>
+                    <button
+                      onClick={clearAll}
+                      className="px-2.5 py-1 text-[10px] uppercase tracking-widest font-bold text-[#ff5252] border border-[#ff5252]/50 hover:bg-[#ff5252] hover:text-[#0b0f0c] transition-all"
+                    >
+                      Y
+                    </button>
+                    <button
+                      onClick={() => setPendingClearAll(false)}
+                      className="px-2.5 py-1 text-[10px] uppercase tracking-widest text-[#5a7050] border border-[#223021] hover:border-[#5a7050] transition-all"
+                    >
+                      N
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setPendingClearAll(true)}
+                    disabled={passwordArray.length === 0}
+                    className="btn-ghost !py-1.5 !px-2 sm:!px-3 flex items-center justify-center gap-1.5 whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
+                    title="Erase all records"
+                  >
+                    <span className="hidden sm:inline-flex"><TrashIcon /></span> Clear all
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -472,7 +474,7 @@ const Manager = () => {
             return (
               <div
                 key={item.id}
-                className="flex flex-col sm:flex-row sm:items-center gap-3 px-6 py-4 border-b border-[#1a231a] last:border-0 hover:bg-[#131a11] transition-colors row-enter"
+                className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 px-4 sm:px-6 py-4 border-b border-[#1a231a] last:border-0 hover:bg-[#131a11] transition-colors row-enter"
               >
                 {/* Index + site */}
                 <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -500,7 +502,7 @@ const Manager = () => {
                 </div>
 
                 {/* Password */}
-                <div className="flex items-center gap-2 sm:w-48">
+                <div className="flex items-center gap-2 min-w-0 sm:w-48">
                   <span className="text-[#8ba382] text-xs truncate">
                     {isVisible ? item.password : '▪'.repeat(Math.min(item.password.length, 12))}
                   </span>
